@@ -15,6 +15,7 @@ class create_key(object):
             key_size = 3072           
         elif key_size_length_change == 5:
             key_size = 4096
+        #公钥指数65537
         key = rsa.generate_private_key(public_exponent=65537,key_size=key_size,backend=default_backend())
         #保存私钥文件
         with open(key_name+".key","wb") as f:
