@@ -5,22 +5,22 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
 
 class create_crl(object):
-    def rsa_crl(self,crt_name):
+    def rsa_crl(self,crt_name,ca_key_name,ca_crt_name):
         #加载被吊销的证书
-        with open(crt_name+'_revoke.crt','rb') as revoke_file:
+        with open(crt_name + '.crt','rb') as revoke_file:
             revoke_file = x509.load_pem_x509_certificate(
                 revoke_file.read(),
                 backend=default_backend()
             )
         #加载ca key
-        with open('rsa_ca.key', 'rb') as  key_file:
-            key = serialization.load_pem_private_key(
+        with open(ca_key_name + '.key', 'rb') as  key_file:
+            ca_key = serialization.load_pem_private_key(
             key_file.read(),
             password=None,
             backend=default_backend()
             )
         #加载ca
-        with open('rsa_ca.crt','rb') as ca_file:
+        with open(ca_crt_name + '.crt','rb') as ca_file:
             ca_file = x509.load_pem_x509_certificate(
                 ca_file.read(),
                 backend=default_backend()
@@ -42,28 +42,28 @@ class create_crl(object):
             ).build(
                 default_backend()
             )
-            ).sign(key,algorithm,backend=default_backend())
+            ).sign(ca_key,algorithm,backend=default_backend())
         #保存生成的crl
-        with open(crt_name+'_revoke.crl','wb') as f:
+        with open(crt_name + '.crl','wb') as f:
             f.write(crl.public_bytes(encoding=serialization.Encoding.PEM,))
 
 
-    def ecc_crl(self,crt_name):
+    def ecc_crl(self,crt_name,ca_key_name,ca_crt_name):
         #加载被吊销的证书
-        with open(crt_name+'_revoke.crt','rb') as revoke_file:
+        with open(crt_name + '.crt','rb') as revoke_file:
             revoke_file = x509.load_pem_x509_certificate(
                 revoke_file.read(),
                 backend=default_backend()
             )
         #加载ca key
-        with open('ecc_ca.key', 'rb') as  key_file:
-            key = serialization.load_pem_private_key(
+        with open(ca_key_name + '.key', 'rb') as  key_file:
+            ca_key = serialization.load_pem_private_key(
             key_file.read(),
             password=None,
             backend=default_backend()
             )
         #加载ca
-        with open('ecc_ca.crt','rb') as ca_file:
+        with open(ca_crt_name + '.crt','rb') as ca_file:
             ca_file = x509.load_pem_x509_certificate(
                 ca_file.read(),
                 backend=default_backend()
@@ -85,7 +85,7 @@ class create_crl(object):
             ).build(
                 default_backend()
             )
-            ).sign(key,algorithm,backend=default_backend())
+            ).sign(ca_key,algorithm,backend=default_backend())
         #保存生成的crl
-        with open(crt_name+'_revoke.crl','wb') as f:
+        with open(crt_name + '.crl','wb') as f:
             f.write(crl.public_bytes(encoding=serialization.Encoding.PEM,))
