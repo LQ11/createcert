@@ -1,7 +1,7 @@
 from ca import *
 
 if __name__ == '__main__':
-    
+    #CRL分发点/OCSP可输入
     cert_type = int(input("证书类型：\n1：RSA\n2：ECC\n"))
     key_size_length_change = int(input("密钥长度：\n1：512 or prime256v1\n2：1024 or secp384r1\n3：2048 or secp521r1\n4：3072\n5：4096\n"))
     key_name = input("输入密钥名称")
