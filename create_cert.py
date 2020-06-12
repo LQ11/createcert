@@ -34,6 +34,8 @@ class create_cert(object):
         ])
         
         algorithm = ca_file.signature_hash_algorithm
+        #设置crl分发点URI
+        crl_dp = x509.DistributionPoint([x509.UniformResourceIdentifier('http://192.168.100.21/xx.crl')],relative_name=None,reasons=None,crl_issuer=None,)
 
         cert = x509.CertificateBuilder().subject_name(
         subject).issuer_name(issuer).public_key(key.public_key()).serial_number(x509.random_serial_number()).not_valid_before(datetime.datetime.utcnow()
@@ -49,7 +51,10 @@ class create_cert(object):
         critical=False).add_extension(
             extension = 
         x509.BasicConstraints(ca=True, path_length=None), 
-        critical=True).sign(ca_key, algorithm, default_backend())
+        critical=True).add_extension(
+            extension = 
+            x509.CRLDistributionPoints([crl_dp]),critical=False
+        ).sign(ca_key, algorithm, default_backend())
         
         with open(crt_name + ".crt", "wb") as f:
             f.write(cert.public_bytes(serialization.Encoding.PEM))
@@ -87,6 +92,8 @@ class create_cert(object):
         
         algorithm = ca_file.signature_hash_algorithm
 
+        crl_dp = x509.DistributionPoint([x509.UniformResourceIdentifier('http://192.168.100.21/xx.crl')],relative_name=None,reasons=None,crl_issuer=None,)
+
         cert = x509.CertificateBuilder().subject_name(
         subject).issuer_name(issuer).public_key(key.public_key()).serial_number(x509.random_serial_number()).not_valid_before(datetime.datetime.utcnow()
         ).not_valid_after(
@@ -101,7 +108,10 @@ class create_cert(object):
         critical=False).add_extension(
             extension = 
         x509.BasicConstraints(ca=True, path_length=None), 
-        critical=True).sign(ca_key, algorithm, default_backend())
+        critical=True).add_extension(
+            extension = 
+            x509.CRLDistributionPoints([crl_dp]),critical=False
+        ).sign(ca_key, algorithm, default_backend())
 
         with open(crt_name + ".crt", "wb") as f:
             f.write(cert.public_bytes(serialization.Encoding.PEM))
